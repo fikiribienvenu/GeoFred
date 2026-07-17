@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, ClipboardList, MessageSquare, User, LogOut } from 'lucide-react';
+import { LayoutDashboard, ClipboardList, MessageSquare, User, LogOut, Building2, PlusCircle } from 'lucide-react';
 import { useAuth } from '@/components/providers/AuthProvider';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 const navItems = [
   { href: '/agent', label: 'Overview', icon: LayoutDashboard },
   { href: '/agent/requests', label: 'Assigned Requests', icon: ClipboardList },
+  { href: '/agent/properties/new', label: 'Submit Property', icon: PlusCircle },
   { href: '/agent/messages', label: 'Messages', icon: MessageSquare },
   { href: '/agent/profile', label: 'Profile', icon: User },
 ];

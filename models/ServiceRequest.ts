@@ -11,7 +11,13 @@ export type ServiceType =
   | 'building_sale';
 
 export interface IServiceRequest extends Document {
-  clientId: mongoose.Types.ObjectId;
+  // Registered client (optional — guest requests have no clientId)
+  clientId?: mongoose.Types.ObjectId;
+  // Guest info for requests without account
+  guestName?: string;
+  guestEmail?: string;
+  guestPhone?: string;
+  isGuest: boolean;
   serviceType: ServiceType;
   province: string;
   district: string;
@@ -31,7 +37,11 @@ export interface IServiceRequest extends Document {
 
 const ServiceRequestSchema = new Schema<IServiceRequest>(
   {
-    clientId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    clientId: { type: Schema.Types.ObjectId, ref: 'User' }, // optional for guests
+    guestName: { type: String },
+    guestEmail: { type: String },
+    guestPhone: { type: String },
+    isGuest: { type: Boolean, default: false },
     serviceType: {
       type: String,
       enum: [
@@ -62,8 +72,11 @@ const ServiceRequestSchema = new Schema<IServiceRequest>(
 );
 
 ServiceRequestSchema.index({ clientId: 1, status: 1 });
+ServiceRequestSchema.index({ guestEmail: 1 });
 ServiceRequestSchema.index({ assignedAgent: 1, status: 1 });
 ServiceRequestSchema.index({ district: 1, sector: 1 });
 
-const ServiceRequest = mongoose.models.ServiceRequest || mongoose.model<IServiceRequest>('ServiceRequest', ServiceRequestSchema);
+// Delete cached model to pick up schema changes (important during development)
+delete mongoose.models.ServiceRequest;
+const ServiceRequest = mongoose.model<IServiceRequest>('ServiceRequest', ServiceRequestSchema);
 export default ServiceRequest;

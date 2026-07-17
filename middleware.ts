@@ -5,7 +5,10 @@ import type { NextRequest } from 'next/server';
 const PUBLIC_PATHS = [
   '/', '/about', '/contact', '/services',
   '/properties', '/auth', '/unauthorized', '/api/auth',
+  '/api/service-requests', // allow guest service requests
+  '/api/agents',           // allow public agent data
   '/_next', '/images', '/favicon.ico',
+  '/dashboard/requests/new', // guests can submit requests
 ];
 
 // Role-restricted paths
@@ -14,7 +17,17 @@ const AGENT_PATHS = ['/agent'];
 const AUTH_PATHS = ['/dashboard', '/admin', '/agent'];
 
 function isPublic(pathname: string): boolean {
-  return PUBLIC_PATHS.some(p => pathname === p || pathname.startsWith(p));
+  return PUBLIC_PATHS.some(p =>
+    pathname === p ||
+    pathname.startsWith('/api/auth') ||
+    pathname.startsWith('/api/service-requests') ||
+    pathname.startsWith('/api/agents') ||
+    pathname.startsWith('/api/properties') ||
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/images') ||
+    pathname === '/dashboard/requests/new' ||
+    (typeof p === 'string' && p !== '/dashboard/requests/new' && pathname.startsWith(p) && !pathname.startsWith('/dashboard/') && !pathname.startsWith('/admin') && !pathname.startsWith('/agent'))
+  );
 }
 
 export function middleware(request: NextRequest) {

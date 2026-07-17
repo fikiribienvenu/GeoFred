@@ -2,11 +2,21 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Property from '@/models/Property';
 import { getUserFromRequest } from '@/lib/auth';
+import mongoose from 'mongoose';
+
+export const dynamic = 'force-dynamic';
 
 export async function GET(_req: NextRequest, { params }: { params: { id: string } }) {
   try {
+    // Validate MongoDB ObjectId before querying
+    if (!mongoose.Types.ObjectId.isValid(params.id)) {
+      return NextResponse.json({ error: 'Property not found' }, { status: 404 });
+    }
+
     await connectDB();
-    const property = await Property.findById(params.id).populate('createdBy', 'name email');
+    const property = await Property.findById(params.id)
+      .populate('createdBy', 'name email')
+      .populate({ path: 'assignedAgent', populate: { path: 'userId', select: 'name email phone' } });
     if (!property) return NextResponse.json({ error: 'Property not found' }, { status: 404 });
 
     // Increment views

@@ -27,13 +27,14 @@ interface Property {
 }
 
 // Placeholder data for when API isn't connected
+// Note: _id is set to '' so detail links are disabled for placeholders
 const placeholderProperties: Property[] = [
-  { _id: '1', title: 'Modern 3-Bedroom House in Kigali', type: 'house', category: 'sale', price: 45000000, district: 'Gasabo', sector: 'Remera', images: ['https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&q=80'], bedrooms: 3, bathrooms: 2, status: 'available' },
-  { _id: '2', title: 'Prime Land Plot - Huye District', type: 'land', category: 'sale', price: 8000000, district: 'Huye', sector: 'Ngoma', images: ['https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600&q=80'], plotSize: 1200, status: 'available' },
-  { _id: '3', title: 'Luxury Apartment for Rent - Kimironko', type: 'apartment', category: 'rent', price: 450000, district: 'Gasabo', sector: 'Kimironko', images: ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600&q=80'], bedrooms: 2, bathrooms: 1, status: 'available' },
-  { _id: '4', title: 'Commercial Space - Nyarugenge', type: 'commercial', category: 'rent', price: 1200000, district: 'Nyarugenge', sector: 'Kigali', images: ['https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&q=80'], status: 'available' },
-  { _id: '5', title: '5-Bedroom Villa with Garden', type: 'house', category: 'sale', price: 120000000, district: 'Kicukiro', sector: 'Gatenga', images: ['https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80'], bedrooms: 5, bathrooms: 4, status: 'available' },
-  { _id: '6', title: 'Fertile Agricultural Land', type: 'land', category: 'sale', price: 3500000, district: 'Muhanga', sector: 'Rongi', images: ['https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=600&q=80'], plotSize: 5000, status: 'available' },
+  { _id: '', title: 'Modern 3-Bedroom House in Kigali', type: 'house', category: 'sale', price: 45000000, district: 'Gasabo', sector: 'Remera', images: ['https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&q=80'], bedrooms: 3, bathrooms: 2, status: 'available' },
+  { _id: '', title: 'Prime Land Plot - Huye District', type: 'land', category: 'sale', price: 8000000, district: 'Huye', sector: 'Ngoma', images: ['https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600&q=80'], plotSize: 1200, status: 'available' },
+  { _id: '', title: 'Luxury Apartment for Rent - Kimironko', type: 'apartment', category: 'rent', price: 450000, district: 'Gasabo', sector: 'Kimironko', images: ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600&q=80'], bedrooms: 2, bathrooms: 1, status: 'available' },
+  { _id: '', title: 'Commercial Space - Nyarugenge', type: 'commercial', category: 'rent', price: 1200000, district: 'Nyarugenge', sector: 'Kigali', images: ['https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&q=80'], status: 'available' },
+  { _id: '', title: '5-Bedroom Villa with Garden', type: 'house', category: 'sale', price: 120000000, district: 'Kicukiro', sector: 'Gatenga', images: ['https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80'], bedrooms: 5, bathrooms: 4, status: 'available' },
+  { _id: '', title: 'Fertile Agricultural Land', type: 'land', category: 'sale', price: 3500000, district: 'Muhanga', sector: 'Rongi', images: ['https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=600&q=80'], plotSize: 5000, status: 'available' },
 ];
 
 function PropertyCard({ property }: { property: Property }) {
@@ -84,11 +85,17 @@ function PropertyCard({ property }: { property: Property }) {
               <Square className="h-3 w-3" />{property.plotSize.toLocaleString()} sqm
             </div>
           )}
-          <Link href={`/properties/${property._id}`}>
-            <Button variant="outline" size="sm" className="w-full mt-3 gap-1.5 group-hover:border-primary group-hover:text-primary">
+          {property._id ? (
+            <Link href={`/properties/${property._id}`}>
+              <Button variant="outline" size="sm" className="w-full mt-3 gap-1.5 group-hover:border-primary group-hover:text-primary">
+                <Eye className="h-3.5 w-3.5" /> View Details
+              </Button>
+            </Link>
+          ) : (
+            <Button variant="outline" size="sm" className="w-full mt-3 gap-1.5 opacity-50 cursor-not-allowed" disabled>
               <Eye className="h-3.5 w-3.5" /> View Details
             </Button>
-          </Link>
+          )}
         </CardContent>
       </Card>
     </motion.div>

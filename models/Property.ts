@@ -14,10 +14,9 @@ export interface IProperty extends Document {
   contactInfo: { name: string; phone: string; email?: string };
   status: 'available' | 'sold' | 'rented' | 'pending';
   published: boolean;
-  // Land specific
+  assignedAgent?: mongoose.Types.ObjectId; // auto-assigned based on location
   plotSize?: number;
   plotSizeUnit?: 'sqm' | 'acres' | 'hectares';
-  // House specific
   bedrooms?: number;
   bathrooms?: number;
   parkingSpaces?: number;
@@ -40,10 +39,7 @@ const PropertySchema = new Schema<IProperty>(
     province: { type: String, required: true },
     district: { type: String, required: true },
     sector: { type: String, required: true },
-    coordinates: {
-      lat: { type: Number },
-      lng: { type: Number },
-    },
+    coordinates: { lat: { type: Number }, lng: { type: Number } },
     description: { type: String, required: true },
     images: [{ type: String }],
     contactInfo: {
@@ -57,6 +53,7 @@ const PropertySchema = new Schema<IProperty>(
       default: 'available',
     },
     published: { type: Boolean, default: false },
+    assignedAgent: { type: Schema.Types.ObjectId, ref: 'Agent' },
     plotSize: { type: Number },
     plotSizeUnit: { type: String, enum: ['sqm', 'acres', 'hectares'], default: 'sqm' },
     bedrooms: { type: Number },
@@ -76,6 +73,7 @@ PropertySchema.index({ district: 1, sector: 1, type: 1, category: 1 });
 PropertySchema.index({ price: 1 });
 PropertySchema.index({ published: 1, status: 1 });
 PropertySchema.index({ title: 'text', description: 'text' });
+PropertySchema.index({ assignedAgent: 1 });
 
 const Property = mongoose.models.Property || mongoose.model<IProperty>('Property', PropertySchema);
 export default Property;

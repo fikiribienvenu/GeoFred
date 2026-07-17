@@ -82,7 +82,7 @@ export default function Footer() {
 
       <div className="border-t border-gray-800">
         <div className="container mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-2 text-xs text-gray-500">
-          <p>© {new Date().getFullYear()} GeoFredE-Terra State. All rights reserved.</p>
+          <p>© 2024 GeoFredE-Terra State. All rights reserved.</p>
           <div className="flex gap-4">
             <Link href="/privacy" className="hover:text-gray-300 transition-colors">Privacy Policy</Link>
             <Link href="/terms" className="hover:text-gray-300 transition-colors">Terms of Service</Link>

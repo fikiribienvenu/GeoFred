@@ -30,16 +30,25 @@ export async function PATCH(req: NextRequest) {
     if (!authUser) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     await connectDB();
-    const { bio, name, phone } = await req.json();
+    const { bio, name, phone, profileImage } = await req.json();
 
-    if (bio !== undefined) {
-      await Agent.findOneAndUpdate({ userId: authUser.userId }, { bio });
+    // Update agent fields
+    const agentUpdate: Record<string, unknown> = {};
+    if (bio !== undefined) agentUpdate.bio = bio;
+    if (profileImage !== undefined) agentUpdate.profileImage = profileImage;
+
+    if (Object.keys(agentUpdate).length > 0) {
+      await Agent.findOneAndUpdate({ userId: authUser.userId }, agentUpdate);
     }
-    if (name || phone) {
-      const update: Record<string, string> = {};
-      if (name) update.name = name;
-      if (phone) update.phone = phone;
-      await User.findByIdAndUpdate(authUser.userId, update);
+
+    // Update user fields
+    const userUpdate: Record<string, string> = {};
+    if (name) userUpdate.name = name;
+    if (phone) userUpdate.phone = phone;
+    if (profileImage) userUpdate.avatar = profileImage; // sync to user too
+
+    if (Object.keys(userUpdate).length > 0) {
+      await User.findByIdAndUpdate(authUser.userId, userUpdate);
     }
 
     return NextResponse.json({ success: true, message: 'Profile updated' });
