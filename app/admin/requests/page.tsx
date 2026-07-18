@@ -20,7 +20,11 @@ interface Request {
   priority: string;
   description: string;
   createdAt: string;
-  clientId: { name: string; email: string; phone: string };
+  isGuest?: boolean;
+  clientId?: { name: string; email: string; phone: string };
+  guestName?: string;
+  guestEmail?: string;
+  guestPhone?: string;
   assignedAgent?: { userId: { name: string }; district: string; sector: string };
 }
 
@@ -110,7 +114,10 @@ export default function AdminRequestsPage() {
                       </div>
                       <p className="text-sm text-muted-foreground line-clamp-1 mb-2">{req.description}</p>
                       <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
-                        <span className="flex items-center gap-1"><User className="h-3 w-3" />{req.clientId?.name}</span>
+                        <span className="flex items-center gap-1"><User className="h-3 w-3" />
+                          {req.isGuest ? req.guestName : req.clientId?.name}
+                          {req.isGuest && <span className="text-blue-500 text-xs ml-1">(Guest)</span>}
+                        </span>
                         <span className="flex items-center gap-1"><MapPin className="h-3 w-3" />{req.sector}, {req.district}</span>
                         <span className="flex items-center gap-1"><Calendar className="h-3 w-3" />{formatDate(req.createdAt)}</span>
                         {req.assignedAgent && (

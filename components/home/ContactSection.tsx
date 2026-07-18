@@ -38,8 +38,8 @@ export default function ContactSection() {
           <motion.div initial={{ opacity: 0, x: -30 }} animate={inView ? { opacity: 1, x: 0 } : {}} className="space-y-6">
             {[
               { icon: MapPin, title: 'Office Address', lines: ['KG 123 St, Gasabo District', 'Kigali, Rwanda'] },
-              { icon: Phone, title: 'Phone Number', lines: ['+250 788 000 000', '+250 722 000 000'] },
-              { icon: Mail, title: 'Email Address', lines: ['info@geofred.com', 'support@geofred.com'] },
+              { icon: Phone, title: 'Phone Number', lines: ['+250 786 532 159', '+250 786 532 159'] },
+              { icon: Mail, title: 'Email Address', lines: ['fikiribienvenuregis@gmail.com', 'fikiribienvenuregis@gmail.com'] },
               { icon: Clock, title: 'Working Hours', lines: ['Mon – Fri: 8:00 AM – 6:00 PM', 'Sat: 9:00 AM – 3:00 PM'] },
             ].map(({ icon: Icon, title, lines }) => (
               <div key={title} className="flex items-start gap-4">

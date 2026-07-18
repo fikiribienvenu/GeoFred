@@ -63,11 +63,11 @@ export default function Footer() {
               </div>
               <div className="flex items-center gap-3">
                 <Phone className="h-4 w-4 text-primary flex-shrink-0" />
-                <a href="tel:+250788000000" className="hover:text-primary transition-colors">+250 788 000 000</a>
+                <a href="tel:+250786532159" className="hover:text-primary transition-colors">+250 786 532 159</a>
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="h-4 w-4 text-primary flex-shrink-0" />
-                <a href="mailto:info@geofred.com" className="hover:text-primary transition-colors">info@geofred.com</a>
+                <a href="mailto:fikiribienvenuregis@gmail.com" className="hover:text-primary transition-colors">fikiribienvenuregis@gmail.com</a>
               </div>
             </div>
 

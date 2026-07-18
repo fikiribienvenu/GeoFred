@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Search, MapPin, User, Calendar, CheckCircle, RefreshCw } from 'lucide-react';
+import { Search, MapPin, User, Calendar, CheckCircle, RefreshCw, Phone, Mail, MessageCircle, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -15,11 +15,23 @@ interface Request {
   serviceType: string;
   district: string;
   sector: string;
+  province: string;
   status: string;
   priority: string;
   description: string;
   createdAt: string;
-  clientId: { name: string; email: string; phone: string };
+  clientId?: { name: string; email: string; phone: string };
+  guestName?: string;
+  guestEmail?: string;
+  guestPhone?: string;
+  isGuest?: boolean;
+}
+
+function getClientInfo(req: Request) {
+  if (req.isGuest || !req.clientId) {
+    return { name: req.guestName || 'Guest', email: req.guestEmail || '', phone: req.guestPhone || '', isGuest: true };
+  }
+  return { name: req.clientId.name, email: req.clientId.email, phone: req.clientId.phone, isGuest: false };
 }
 
 const statusConfig: Record<string, { label: string; variant: 'warning' | 'info' | 'success' | 'destructive' | 'secondary' }> = {
@@ -35,6 +47,7 @@ export default function AgentRequestsPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [expanded, setExpanded] = useState<string | null>(null);
 
   const fetchRequests = async () => {
     setLoading(true);
@@ -55,9 +68,10 @@ export default function AgentRequestsPage() {
   };
 
   const filtered = requests.filter(r => {
+    const client = getClientInfo(r);
     const matchSearch = !search ||
       r.serviceType.toLowerCase().includes(search.toLowerCase()) ||
-      r.clientId?.name?.toLowerCase().includes(search.toLowerCase()) ||
+      client.name.toLowerCase().includes(search.toLowerCase()) ||
       r.district.toLowerCase().includes(search.toLowerCase());
     const matchStatus = !statusFilter || r.status === statusFilter;
     return matchSearch && matchStatus;
@@ -104,11 +118,15 @@ export default function AgentRequestsPage() {
         <div className="space-y-3">
           {filtered.map((req, i) => {
             const sc = statusConfig[req.status] || { label: req.status, variant: 'secondary' as const };
+            const client = getClientInfo(req);
+            const isExpanded = expanded === req._id;
             return (
               <motion.div key={req._id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.05 }}>
-                <Card className="hover:shadow-md transition-shadow">
-                  <CardContent className="p-4">
+                <Card className="hover:shadow-md transition-shadow overflow-hidden">
+                  {/* Header — clickable to expand */}
+                  <div className="p-4 cursor-pointer hover:bg-muted/30 transition-colors"
+                    onClick={() => setExpanded(isExpanded ? null : req._id)}>
                     <div className="flex flex-wrap items-start gap-4 justify-between">
                       <div className="flex-1 min-w-0">
                         <div className="flex flex-wrap items-center gap-2 mb-2">
@@ -119,12 +137,14 @@ export default function AgentRequestsPage() {
                           <span className={`text-xs px-2 py-0.5 rounded-full font-medium capitalize ${priorityColor(req.priority)}`}>
                             {req.priority}
                           </span>
+                          {client.isGuest && (
+                            <span className="text-xs px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 font-medium">Guest</span>
+                          )}
                         </div>
                         <p className="text-sm text-muted-foreground line-clamp-1 mb-2">{req.description}</p>
                         <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
                           <span className="flex items-center gap-1">
-                            <User className="h-3 w-3" />
-                            {req.clientId?.name} · {req.clientId?.phone}
+                            <User className="h-3 w-3" />{client.name}
                           </span>
                           <span className="flex items-center gap-1">
                             <MapPin className="h-3 w-3" />{req.sector}, {req.district}
@@ -134,11 +154,66 @@ export default function AgentRequestsPage() {
                           </span>
                         </div>
                       </div>
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        <span className="text-xs text-muted-foreground">{isExpanded ? '▲' : '▼'}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Expanded: Full client info + actions */}
+                  {isExpanded && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="border-t border-border bg-muted/20 p-4 space-y-4">
+
+                      {/* Client contact card */}
+                      <div>
+                        <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wide mb-2">
+                          Client Contact Information
+                        </h4>
+                        <div className="bg-white dark:bg-gray-800 rounded-xl p-4 space-y-2">
+                          <div className="flex items-center gap-2 text-sm">
+                            <User className="h-4 w-4 text-primary flex-shrink-0" />
+                            <span className="font-semibold">{client.name}</span>
+                            {client.isGuest && <span className="text-xs text-muted-foreground">(Guest)</span>}
+                          </div>
+                          {client.phone && (
+                            <div className="flex flex-wrap items-center gap-2 text-sm">
+                              <Phone className="h-4 w-4 text-primary flex-shrink-0" />
+                              <a href={`tel:${client.phone}`} className="text-primary hover:underline font-medium">
+                                {client.phone}
+                              </a>
+                              <a href={`https://wa.me/${client.phone.replace(/\D/g, '')}?text=${encodeURIComponent(`Hello ${client.name}, I am your assigned agent for: ${req.serviceType.replace(/_/g, ' ')}`)}`}
+                                target="_blank" rel="noreferrer"
+                                className="text-xs px-2 py-0.5 bg-green-100 text-green-700 rounded-full hover:bg-green-200 transition-colors flex items-center gap-1">
+                                <MessageCircle className="h-3 w-3" /> WhatsApp
+                              </a>
+                            </div>
+                          )}
+                          {client.email && (
+                            <div className="flex items-center gap-2 text-sm">
+                              <Mail className="h-4 w-4 text-primary flex-shrink-0" />
+                              <a href={`mailto:${client.email}?subject=Your ${req.serviceType.replace(/_/g, ' ')} Request`}
+                                className="text-primary hover:underline">
+                                {client.email}
+                              </a>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Location */}
+                      <div className="text-sm text-muted-foreground flex items-center gap-1">
+                        <MapPin className="h-4 w-4" />{req.sector}, {req.district}, {req.province}
+                      </div>
+
+                      {/* Action buttons */}
                       <div className="flex flex-wrap gap-2">
                         {req.status === 'assigned' && (
-                          <Button size="sm" variant="outline" className="h-8 text-xs border-blue-200 text-blue-600 hover:bg-blue-50"
+                          <Button size="sm" variant="terra" className="gap-1.5"
                             onClick={() => updateStatus(req._id, 'in_progress')}>
-                            Start Work
+                            <Clock className="h-3.5 w-3.5" /> Start Work
                           </Button>
                         )}
                         {req.status === 'in_progress' && (
@@ -153,9 +228,16 @@ export default function AgentRequestsPage() {
                             Cancel
                           </Button>
                         )}
+                        {client.phone && (
+                          <a href={`tel:${client.phone}`}>
+                            <Button size="sm" variant="outline" className="gap-1.5">
+                              <Phone className="h-3.5 w-3.5" /> Call Client
+                            </Button>
+                          </a>
+                        )}
                       </div>
-                    </div>
-                  </CardContent>
+                    </motion.div>
+                  )}
                 </Card>
               </motion.div>
             );

@@ -76,7 +76,7 @@ ServiceRequestSchema.index({ guestEmail: 1 });
 ServiceRequestSchema.index({ assignedAgent: 1, status: 1 });
 ServiceRequestSchema.index({ district: 1, sector: 1 });
 
-// Delete cached model to pick up schema changes (important during development)
-delete mongoose.models.ServiceRequest;
-const ServiceRequest = mongoose.model<IServiceRequest>('ServiceRequest', ServiceRequestSchema);
+// Use existing model or create new one — never delete to avoid populate issues
+const ServiceRequest = (mongoose.models.ServiceRequest as mongoose.Model<IServiceRequest>)
+  || mongoose.model<IServiceRequest>('ServiceRequest', ServiceRequestSchema);
 export default ServiceRequest;
