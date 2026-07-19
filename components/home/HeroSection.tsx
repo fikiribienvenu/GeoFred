@@ -118,13 +118,6 @@ export default function HeroSection() {
 
       <div className="relative z-20 container mx-auto px-4 py-24 md:py-32">
         <div className="max-w-4xl mx-auto text-center">
-          {/* Badge */}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 bg-primary/20 backdrop-blur-sm border border-primary/30 text-white rounded-full px-4 py-1.5 text-sm font-medium mb-6">
-            <MapPin className="h-3.5 w-3.5 text-primary" />
-            Rwanda&apos;s #1 Real Estate Platform
-          </motion.div>
-
           {/* Headline */}
           <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}
             className="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-tight mb-6">
