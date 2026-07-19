@@ -11,13 +11,15 @@ export async function GET() {
 
     // Get top 3 approved agents sorted by rating and completed requests
     const agents = await Agent.find({ approvalStatus: 'approved' })
-      .populate('userId', 'name')
+      .populate('userId', 'name avatar')
       .sort({ rating: -1, completedRequests: -1 })
       .limit(3);
 
     const agentList = agents.map((a) => ({
       _id: a._id,
-      name: (a.userId as { name?: string })?.name || 'Agent',
+      name: (a.userId as { name?: string; avatar?: string })?.name || 'Agent',
+      avatar: (a.userId as { name?: string; avatar?: string })?.avatar || null,
+      profileImage: a.profileImage || null,
       district: a.district,
       sector: a.sector,
       province: a.province,

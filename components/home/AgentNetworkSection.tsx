@@ -5,11 +5,14 @@ import { motion, useInView } from 'framer-motion';
 import { Users, MapPin, Star, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import Image from 'next/image';
 import axios from 'axios';
 
 interface AgentCard {
   _id: string;
   name: string;
+  avatar?: string | null;
+  profileImage?: string | null;
   district: string;
   sector: string;
   rating: number;
@@ -29,16 +32,14 @@ export default function AgentNetworkSection() {
         setAgents(data.agents || []);
         setStats(data.stats || { total: 0, districts: 0, rating: '4.8' });
       })
-      .catch(() => {
-        // No agents yet — show empty state
-        setAgents([]);
-      });
+      .catch(() => setAgents([]));
   }, []);
 
   return (
     <section ref={ref} className="py-20 md:py-28 bg-gray-50 dark:bg-gray-900/50">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          {/* Left: info */}
           <motion.div initial={{ opacity: 0, x: -30 }} animate={inView ? { opacity: 1, x: 0 } : {}} transition={{ duration: 0.6 }}>
             <span className="text-primary font-semibold text-sm tracking-wider uppercase">Our Team</span>
             <h2 className="text-3xl md:text-4xl font-black mt-2 mb-5">Rwanda-Wide Agent Network</h2>
@@ -101,34 +102,67 @@ export default function AgentNetworkSection() {
                 </Link>
               </div>
             ) : (
-              agents.map((agent, i) => (
-                <motion.div
-                  key={agent._id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={inView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ delay: 0.2 + i * 0.1 }}
-                  className="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow flex items-center gap-4">
-                  {/* Avatar with initials */}
-                  <div className="w-14 h-14 rounded-full terra-gradient flex items-center justify-center text-white font-black text-xl flex-shrink-0">
-                    {agent.name?.charAt(0)?.toUpperCase() || 'A'}
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="font-bold text-sm">{agent.name}</h4>
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5">
-                      <MapPin className="h-3 w-3" />
-                      {agent.sector}, {agent.district}
+              agents.map((agent, i) => {
+                const photoUrl = agent.profileImage || agent.avatar || null;
+                return (
+                  <motion.div
+                    key={agent._id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={inView ? { opacity: 1, y: 0 } : {}}
+                    transition={{ delay: 0.2 + i * 0.1 }}
+                    className="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow flex items-center gap-4">
+
+                    {/* Avatar — real photo or initial fallback */}
+                    <div className="relative w-14 h-14 rounded-full flex-shrink-0 overflow-hidden">
+                      {photoUrl ? (
+                        <Image
+                          src={photoUrl}
+                          alt={agent.name}
+                          fill
+                          className="object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full terra-gradient flex items-center justify-center text-white font-black text-xl">
+                          {agent.name?.charAt(0)?.toUpperCase() || 'A'}
+                        </div>
+                      )}
+                      {/* Online dot */}
+                      <span className="absolute bottom-0.5 right-0.5 w-3 h-3 bg-green-400 border-2 border-white rounded-full" />
                     </div>
-                    <div className="text-xs text-muted-foreground">{agent.province}</div>
-                  </div>
-                  <div className="text-right text-xs">
-                    <div className="flex items-center gap-1 text-yellow-500 font-bold">
-                      <Star className="h-3.5 w-3.5 fill-yellow-500" />
-                      {agent.rating?.toFixed(1) || '0.0'}
+
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-bold text-sm">{agent.name}</h4>
+                      <div className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5">
+                        <MapPin className="h-3 w-3" />
+                        {agent.sector}, {agent.district}
+                      </div>
+                      <div className="text-xs text-muted-foreground">{agent.province}</div>
                     </div>
-                    <div className="text-muted-foreground">{agent.completedRequests || 0} done</div>
-                  </div>
-                </motion.div>
-              ))
+
+                    <div className="text-right text-xs flex-shrink-0">
+                      <div className="flex items-center gap-1 text-yellow-500 font-bold justify-end">
+                        <Star className="h-3.5 w-3.5 fill-yellow-500" />
+                        {agent.rating > 0 ? agent.rating.toFixed(1) : 'New'}
+                      </div>
+                      <div className="text-muted-foreground">{agent.completedRequests || 0} done</div>
+                      <div className="text-green-500 font-medium mt-0.5">● Active</div>
+                    </div>
+                  </motion.div>
+                );
+              })
+            )}
+
+            {/* CTA to see all */}
+            {agents.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={inView ? { opacity: 1 } : {}}
+                transition={{ delay: 0.6 }}
+                className="text-center pt-2">
+                <Link href="/auth/agent-register">
+                  <Button variant="outline" size="sm">Join Our Agent Network</Button>
+                </Link>
+              </motion.div>
             )}
           </motion.div>
         </div>

@@ -1,19 +1,51 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
-import { Search, MapPin, Home, Layers, ArrowRight, ChevronDown } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Search, MapPin, Home, Layers, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getProvinces, getDistricts } from '@/lib/rwanda';
+
+const SLIDES = [
+  {
+    url: 'https://images.unsplash.com/photo-1580746738099-1de1abe9a4e0?w=1920&q=80',
+    label: 'City of Kigali, Rwanda',
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1628744448840-55bdb2497bd4?w=1920&q=80',
+    label: 'Land Plot Ready to Build',
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=1920&q=80',
+    label: 'Construction in Progress',
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1613977257363-707ba9348227?w=1920&q=80',
+    label: 'Finished Modern Villa',
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1583422409516-2895a77efded?w=1920&q=80',
+    label: 'Kigali Convention Centre',
+  },
+];
 
 export default function HeroSection() {
   const router = useRouter();
   const [searchType, setSearchType] = useState<'buy' | 'rent' | 'service'>('buy');
   const [province, setProvince] = useState('');
   const [district, setDistrict] = useState('');
+  const [currentSlide, setCurrentSlide] = useState(0);
   const provinces = getProvinces();
   const districts = province ? getDistricts(province as Parameters<typeof getDistricts>[0]) : [];
+
+  // Auto-advance slides every 4 seconds
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide(prev => (prev + 1) % SLIDES.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, []);
 
   const handleSearch = () => {
     if (searchType === 'service') {
@@ -25,29 +57,66 @@ export default function HeroSection() {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background */}
+      {/* Animated background slideshow */}
       <div className="absolute inset-0 z-0">
-        <div
-          className="w-full h-full bg-cover bg-center"
-          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1583422409516-2895a77efded?w=1920&q=80')" }}
-        />
-        <div className="absolute inset-0 hero-overlay" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent" />
+        <AnimatePresence mode="sync">
+          <motion.div
+            key={currentSlide}
+            initial={{ opacity: 0, scale: 1.05 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+            transition={{ duration: 1.2, ease: 'easeInOut' }}
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url('${SLIDES[currentSlide].url}')` }}
+          />
+        </AnimatePresence>
+        {/* Dark overlay */}
+        <div className="absolute inset-0 bg-black/55 z-10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/50 to-transparent z-10" />
+      </div>
+
+      {/* Slide indicators */}
+      <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
+        {SLIDES.map((slide, i) => (
+          <button
+            key={i}
+            onClick={() => setCurrentSlide(i)}
+            className="group flex flex-col items-center gap-1"
+          >
+            <span className={`block h-1 rounded-full transition-all duration-500 ${i === currentSlide ? 'w-8 bg-primary' : 'w-3 bg-white/40 hover:bg-white/70'}`} />
+          </button>
+        ))}
+      </div>
+
+      {/* Slide label */}
+      <div className="absolute bottom-28 left-1/2 -translate-x-1/2 z-20">
+        <AnimatePresence mode="wait">
+          <motion.span
+            key={currentSlide}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.4 }}
+            className="text-white/60 text-xs font-medium tracking-widest uppercase"
+          >
+            {SLIDES[currentSlide].label}
+          </motion.span>
+        </AnimatePresence>
       </div>
 
       {/* Animated particles */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
+      <div className="absolute inset-0 z-10 overflow-hidden pointer-events-none">
         {[...Array(6)].map((_, i) => (
           <motion.div key={i}
-            className="absolute w-2 h-2 bg-primary/40 rounded-full"
-            style={{ left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%` }}
-            animate={{ y: [0, -30, 0], opacity: [0.3, 0.8, 0.3] }}
-            transition={{ duration: 3 + i, repeat: Infinity, delay: i * 0.5 }}
+            className="absolute w-1.5 h-1.5 bg-primary/50 rounded-full"
+            style={{ left: `${15 + i * 14}%`, top: `${20 + (i % 3) * 25}%` }}
+            animate={{ y: [0, -25, 0], opacity: [0.3, 0.9, 0.3] }}
+            transition={{ duration: 3 + i * 0.7, repeat: Infinity, delay: i * 0.6 }}
           />
         ))}
       </div>
 
-      <div className="relative z-10 container mx-auto px-4 py-24 md:py-32">
+      <div className="relative z-20 container mx-auto px-4 py-24 md:py-32">
         <div className="max-w-4xl mx-auto text-center">
           {/* Badge */}
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
@@ -60,7 +129,7 @@ export default function HeroSection() {
           <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}
             className="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-tight mb-6">
             Find Your Perfect{' '}
-            <span className="text-gradient bg-gradient-to-r from-orange-400 to-red-400" style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+            <span style={{ WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', backgroundImage: 'linear-gradient(to right, #fb923c, #ef4444)' }}>
               Property
             </span>
             {' '}in Rwanda

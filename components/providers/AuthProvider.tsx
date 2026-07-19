@@ -63,7 +63,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
     localStorage.removeItem('geofred_user');
     localStorage.removeItem('geofred_token');
-    window.location.href = '/auth/login';
+    window.location.href = '/';
   };
 
   return (
