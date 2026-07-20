@@ -36,13 +36,13 @@ export async function GET(req: NextRequest) {
     const minPrice = searchParams.get('minPrice');
     const maxPrice = searchParams.get('maxPrice');
     const bedrooms = searchParams.get('bedrooms');
-    const status = searchParams.get('status') || 'available';
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '12');
     const search = searchParams.get('search');
 
+    // Show all available properties (admin can unpublish specific ones if needed)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const query: Record<string, any> = { published: true, status };
+    const query: Record<string, any> = { status: { $in: ['available', 'pending'] } };
     if (type) query.type = type;
     if (category) query.category = category;
     if (district) query.district = district;
