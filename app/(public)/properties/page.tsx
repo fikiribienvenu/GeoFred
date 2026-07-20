@@ -13,7 +13,6 @@ import { getProvinces, getDistricts, getSectors } from '@/lib/rwanda';
 import type { Province } from '@/lib/rwanda';
 import Link from 'next/link';
 import Image from 'next/image';
-import api from '@/lib/axios';
 
 interface Property {
   _id: string;
@@ -51,15 +50,23 @@ function PropertiesContent() {
   const districts = filters.province ? getDistricts(filters.province as Province) : [];
   const sectors = filters.province && filters.district ? getSectors(filters.province as Province, filters.district) : [];
 
-  const fetchProperties = async () => {
+  const fetchProperties = async (retries = 3) => {
     setLoading(true);
     try {
       const params = new URLSearchParams({ page: String(page), limit: '12' });
       Object.entries(filters).forEach(([k, v]) => { if (v) params.set(k, v); });
-      const { data } = await api.get(`/api/properties?${params}`);
+      const res = await fetch(`/api/properties?${params}`, { cache: 'no-store' });
+      if (!res.ok) throw new Error('Failed');
+      const data = await res.json();
       setProperties(data.properties || []);
       setTotal(data.total || 0);
-    } catch { setProperties([]); }
+    } catch {
+      if (retries > 1) {
+        setTimeout(() => fetchProperties(retries - 1), 1500);
+      } else {
+        setProperties([]);
+      }
+    }
     setLoading(false);
   };
 

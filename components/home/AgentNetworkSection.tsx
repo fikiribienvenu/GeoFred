@@ -6,7 +6,6 @@ import { Users, MapPin, Star, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import Image from 'next/image';
-import axios from 'axios';
 
 interface AgentCard {
   _id: string;
@@ -27,12 +26,19 @@ export default function AgentNetworkSection() {
   const [stats, setStats] = useState({ total: 0, districts: 0, rating: '4.8' });
 
   useEffect(() => {
-    axios.get('/api/agents/featured')
-      .then(({ data }) => {
+    const fetchWithRetry = async (retries = 3) => {
+      try {
+        const res = await fetch('/api/agents/featured', { cache: 'no-store' });
+        if (!res.ok) throw new Error('Failed');
+        const data = await res.json();
         setAgents(data.agents || []);
         setStats(data.stats || { total: 0, districts: 0, rating: '4.8' });
-      })
-      .catch(() => setAgents([]));
+      } catch {
+        if (retries > 1) setTimeout(() => fetchWithRetry(retries - 1), 1500);
+        else setAgents([]);
+      }
+    };
+    fetchWithRetry();
   }, []);
 
   return (

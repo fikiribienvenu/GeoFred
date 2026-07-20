@@ -8,7 +8,6 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { formatCurrency } from '@/lib/utils';
 import Link from 'next/link';
-import axios from 'axios';
 import Image from 'next/image';
 
 interface Property {
@@ -90,10 +89,20 @@ export default function FeaturedProperties() {
   const [activeTab, setActiveTab] = useState<'all' | 'sale' | 'rent'>('all');
 
   useEffect(() => {
-    axios.get('/api/properties?limit=6')
-      .then(({ data }) => setProperties(data.properties || []))
-      .catch(() => setProperties([]))
-      .finally(() => setLoading(false));
+    const fetchWithRetry = async (retries = 3) => {
+      try {
+        const res = await fetch('/api/properties?limit=6', { cache: 'no-store' });
+        if (!res.ok) throw new Error('Failed');
+        const data = await res.json();
+        setProperties(data.properties || []);
+      } catch {
+        if (retries > 1) setTimeout(() => fetchWithRetry(retries - 1), 1500);
+        else setProperties([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchWithRetry();
   }, []);
 
   const filtered = activeTab === 'all'
