@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { MapPin, Bed, Bath, Square, Heart, Eye, ArrowRight, Home } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -9,23 +9,11 @@ import { Button } from '@/components/ui/button';
 import { formatCurrency } from '@/lib/utils';
 import Link from 'next/link';
 import Image from 'next/image';
+import type { PropertyData } from '@/lib/data';
 
-interface Property {
-  _id: string;
-  title: string;
-  type: string;
-  category: string;
-  price: number;
-  district: string;
-  sector: string;
-  images: string[];
-  bedrooms?: number;
-  bathrooms?: number;
-  plotSize?: number;
-  status: string;
-}
+const FALLBACK = 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&q=80';
 
-function PropertyCard({ property }: { property: Property }) {
+function PropertyCard({ property }: { property: PropertyData }) {
   const [liked, setLiked] = useState(false);
   const isRent = property.category === 'rent';
   const isLand = property.type === 'land';
@@ -35,7 +23,7 @@ function PropertyCard({ property }: { property: Property }) {
       <Card className="overflow-hidden border-0 shadow-md hover:shadow-xl transition-shadow group">
         <div className="relative h-52 overflow-hidden">
           <Image
-            src={property.images[0] || 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&q=80'}
+            src={property.images[0] || FALLBACK}
             alt={property.title}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-500"
@@ -81,33 +69,18 @@ function PropertyCard({ property }: { property: Property }) {
   );
 }
 
-export default function FeaturedProperties() {
+interface Props {
+  initialProperties: PropertyData[];
+}
+
+export default function FeaturedProperties({ initialProperties }: Props) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-100px' });
-  const [properties, setProperties] = useState<Property[]>([]);
-  const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'all' | 'sale' | 'rent'>('all');
 
-  useEffect(() => {
-    const fetchWithRetry = async (retries = 3) => {
-      try {
-        const res = await fetch('/api/properties?limit=6', { cache: 'no-store' });
-        if (!res.ok) throw new Error('Failed');
-        const data = await res.json();
-        setProperties(data.properties || []);
-      } catch {
-        if (retries > 1) setTimeout(() => fetchWithRetry(retries - 1), 1500);
-        else setProperties([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchWithRetry();
-  }, []);
-
   const filtered = activeTab === 'all'
-    ? properties
-    : properties.filter(p => p.category === activeTab);
+    ? initialProperties
+    : initialProperties.filter(p => p.category === activeTab);
 
   return (
     <section ref={ref} className="py-20 md:py-28">
@@ -130,14 +103,7 @@ export default function FeaturedProperties() {
           </div>
         </motion.div>
 
-        {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {[...Array(3)].map((_, i) => (
-              <div key={i} className="h-72 rounded-xl bg-muted animate-pulse" />
-            ))}
-          </div>
-        ) : filtered.length === 0 ? (
-          /* Empty state — no placeholder data */
+        {filtered.length === 0 ? (
           <motion.div initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
             className="text-center py-20 bg-gray-50 dark:bg-gray-800/50 rounded-2xl">
             <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
