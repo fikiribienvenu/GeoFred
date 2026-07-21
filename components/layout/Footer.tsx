@@ -29,11 +29,11 @@ export default function Footer() {
                 className="w-8 h-8 rounded-full bg-gray-800 hover:bg-primary flex items-center justify-center transition-colors">
                 <Linkedin className="h-4 w-4" />
               </a>
-              <a href="https://www.facebook.com" target="_blank" rel="noreferrer"
+              <a href="https://web.facebook.com/profile.php?id=61588748364638" target="_blank" rel="noreferrer"
                 className="w-8 h-8 rounded-full bg-gray-800 hover:bg-primary flex items-center justify-center transition-colors">
                 <Facebook className="h-4 w-4" />
               </a>
-              <a href="https://www.instagram.com" target="_blank" rel="noreferrer"
+              <a href="https://www.instagram.com/geofredeterra/" target="_blank" rel="noreferrer"
                 className="w-8 h-8 rounded-full bg-gray-800 hover:bg-primary flex items-center justify-center transition-colors">
                 <Instagram className="h-4 w-4" />
               </a>
