@@ -39,7 +39,7 @@ export default function ContactSection() {
             {[
               { icon: MapPin, title: 'Office Address', lines: ['KG 123 St, Gasabo District', 'Kigali, Rwanda'] },
               { icon: Phone, title: 'Phone Number', lines: ['+250 786 532 159', '+250 786 532 159'] },
-              { icon: Mail, title: 'Email Address', lines: ['fikiribienvenuregis@gmail.com', 'fikiribienvenuregis@gmail.com'] },
+              { icon: Mail, title: 'Email Address', lines: ['geofredeterra@gmail.com', 'geofredeterra@gmail.com'] },
               { icon: Clock, title: 'Working Hours', lines: ['Mon – Fri: 8:00 AM – 6:00 PM', 'Sat: 9:00 AM – 3:00 PM'] },
             ].map(({ icon: Icon, title, lines }) => (
               <div key={title} className="flex items-start gap-4">

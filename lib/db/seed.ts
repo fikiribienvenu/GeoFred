@@ -32,7 +32,7 @@ async function seed() {
     await mongoose.connect(MONGODB_URI);
     console.log('✅ Connected to MongoDB');
 
-    const existing = await User.findOne({ email: 'admin@geofred.com' });
+    const existing = await User.findOne({ email: 'geofredeterra@gmail.com' });
     if (existing) {
       console.log('⚠️  Admin user already exists');
       process.exit(0);
@@ -42,8 +42,8 @@ async function seed() {
 
     await User.create({
       name: 'System Administrator',
-      email: 'admin@geofred.com',
-      phone: '+250788000000',
+      email: 'geofredeterra@gmail.com',
+      phone: '+250786532159',
       password: hashedPassword,
       role: 'admin',
       status: 'active',
@@ -51,7 +51,7 @@ async function seed() {
     });
 
     console.log('✅ Admin user created:');
-    console.log('   Email:    admin@geofred.com');
+    console.log('   Email:    geofredeterra@gmail.com');
     console.log('   Password: Admin@123!');
     console.log('   ⚠️  Change this password after first login!');
     process.exit(0);

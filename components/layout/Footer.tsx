@@ -21,11 +21,22 @@ export default function Footer() {
               Rwanda&apos;s premier real estate and land survey management platform. Connecting clients with expert agents across all provinces.
             </p>
             <div className="flex gap-3">
-              {[Facebook, Twitter, Instagram, Linkedin].map((Icon, i) => (
-                <a key={i} href="#" className="w-8 h-8 rounded-full bg-gray-800 hover:bg-primary flex items-center justify-center transition-colors">
-                  <Icon className="h-4 w-4" />
-                </a>
-              ))}
+              <a href="https://x.com/GeoFredeTerra" target="_blank" rel="noreferrer"
+                className="w-8 h-8 rounded-full bg-gray-800 hover:bg-primary flex items-center justify-center transition-colors">
+                <Twitter className="h-4 w-4" />
+              </a>
+              <a href="https://www.linkedin.com/in/geo-frede-terra-834363423/" target="_blank" rel="noreferrer"
+                className="w-8 h-8 rounded-full bg-gray-800 hover:bg-primary flex items-center justify-center transition-colors">
+                <Linkedin className="h-4 w-4" />
+              </a>
+              <a href="https://www.facebook.com" target="_blank" rel="noreferrer"
+                className="w-8 h-8 rounded-full bg-gray-800 hover:bg-primary flex items-center justify-center transition-colors">
+                <Facebook className="h-4 w-4" />
+              </a>
+              <a href="https://www.instagram.com" target="_blank" rel="noreferrer"
+                className="w-8 h-8 rounded-full bg-gray-800 hover:bg-primary flex items-center justify-center transition-colors">
+                <Instagram className="h-4 w-4" />
+              </a>
             </div>
           </div>
 
@@ -67,7 +78,7 @@ export default function Footer() {
               </div>
               <div className="flex items-center gap-3">
                 <Mail className="h-4 w-4 text-primary flex-shrink-0" />
-                <a href="mailto:fikiribienvenuregis@gmail.com" className="hover:text-primary transition-colors">fikiribienvenuregis@gmail.com</a>
+                <a href="mailto:geofredeterra@gmail.com" className="hover:text-primary transition-colors">geofredeterra@gmail.com</a>
               </div>
             </div>
 
