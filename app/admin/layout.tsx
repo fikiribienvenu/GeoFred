@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -83,12 +84,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             className="flex-shrink-0 bg-gray-900 dark:bg-gray-950 h-full flex flex-col overflow-hidden border-r border-gray-800">
             {/* Logo */}
             <div className="flex items-center gap-2.5 px-5 h-16 border-b border-gray-800">
-              <div className="w-8 h-8 rounded-lg terra-gradient flex items-center justify-center">
-                <span className="text-white font-black">G</span>
+              <div className="relative w-9 h-9 flex-shrink-0">
+                <Image src="/images/logo-icon.png" alt="GeoFred" fill className="object-contain" />
               </div>
               <div>
-                <div className="text-white font-black text-sm">GeoFredE</div>
-                <div className="text-gray-400 text-xs">Admin Panel</div>
+                <div className="text-white font-black text-sm">Geofred</div>
+                <div className="text-primary text-xs">Admin Panel</div>
               </div>
             </div>
 

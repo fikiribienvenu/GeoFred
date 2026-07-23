@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { LayoutDashboard, ClipboardList, MessageSquare, User, LogOut, Building2, PlusCircle } from 'lucide-react';
 import { useAuth } from '@/components/providers/AuthProvider';
@@ -25,8 +26,8 @@ export default function AgentDashboardLayout({ children }: { children: React.Rea
         <div className="container mx-auto px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/" className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg terra-gradient flex items-center justify-center">
-                <span className="text-white font-black text-sm">G</span>
+              <div className="relative w-7 h-7 flex-shrink-0">
+                <Image src="/images/logo-icon.png" alt="GeoFred" fill className="object-contain" />
               </div>
               <span className="font-black text-sm hidden sm:block">Agent Panel</span>
             </Link>

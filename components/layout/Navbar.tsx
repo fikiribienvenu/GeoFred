@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -68,12 +69,18 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-9 h-9 rounded-lg terra-gradient flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
-              <span className="text-white font-black text-lg">G</span>
+            <div className="relative w-10 h-10 flex-shrink-0">
+              <Image
+                src="/images/logo-icon.png"
+                alt="GeoFred E-Terrastate"
+                fill
+                className="object-contain"
+                priority
+              />
             </div>
             <div className="hidden sm:block">
-              <span className="font-black text-lg text-gradient leading-none">GeoFredE</span>
-              <p className="text-xs text-muted-foreground leading-none">Terra State</p>
+              <span className={cn('font-black text-lg leading-none', scrolled ? 'text-foreground' : 'text-white')}>Geofred</span>
+              <p className={cn('text-xs leading-none', scrolled ? 'text-primary' : 'text-orange-400')}>E-terrastate</p>
             </div>
           </Link>
 

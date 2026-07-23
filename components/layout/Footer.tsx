@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { MapPin, Phone, Mail, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
 
 export default function Footer() {
@@ -8,13 +9,13 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand */}
           <div>
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-9 h-9 rounded-lg terra-gradient flex items-center justify-center">
-                <span className="text-white font-black text-lg">G</span>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="relative w-12 h-12 flex-shrink-0">
+                <Image src="/images/logo-icon.png" alt="GeoFred E-Terrastate" fill className="object-contain" />
               </div>
               <div>
-                <span className="font-black text-lg text-white">GeoFredE</span>
-                <p className="text-xs text-gray-400">Terra State</p>
+                <span className="font-black text-xl text-white">Geofred</span>
+                <p className="text-xs text-primary">E-terrastate</p>
               </div>
             </div>
             <p className="text-sm text-gray-400 leading-relaxed mb-4">
