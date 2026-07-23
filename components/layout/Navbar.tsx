@@ -71,7 +71,7 @@ export default function Navbar() {
           <Link href="/" className="flex items-center gap-2 group">
             <div className="relative w-10 h-10 flex-shrink-0">
               <Image
-                src="/images/logo-icon.png"
+                src="/images/favicon Geofred logo-04.svg"
                 alt="GeoFred E-Terrastate"
                 fill
                 className="object-contain"

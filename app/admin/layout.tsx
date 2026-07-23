@@ -85,7 +85,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             {/* Logo */}
             <div className="flex items-center gap-2.5 px-5 h-16 border-b border-gray-800">
               <div className="relative w-9 h-9 flex-shrink-0">
-                <Image src="/images/logo-icon.png" alt="GeoFred" fill className="object-contain" />
+                <Image src="/images/reversed Geofred logo-06.svg" alt="GeoFred" fill className="object-contain" />
               </div>
               <div>
                 <div className="text-white font-black text-sm">Geofred</div>

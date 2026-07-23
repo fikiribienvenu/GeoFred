@@ -11,7 +11,7 @@ export default function Footer() {
           <div>
             <div className="flex items-center gap-3 mb-4">
               <div className="relative w-12 h-12 flex-shrink-0">
-                <Image src="/images/logo-icon.png" alt="GeoFred E-Terrastate" fill className="object-contain" />
+                <Image src="/images/favicon Geofred logo-04.svg" alt="GeoFred E-Terrastate" fill className="object-contain" />
               </div>
               <div>
                 <span className="font-black text-xl text-white">Geofred</span>

@@ -27,7 +27,7 @@ export default function AgentDashboardLayout({ children }: { children: React.Rea
           <div className="flex items-center gap-4">
             <Link href="/" className="flex items-center gap-2">
               <div className="relative w-7 h-7 flex-shrink-0">
-                <Image src="/images/logo-icon.png" alt="GeoFred" fill className="object-contain" />
+                <Image src="/images/favicon Geofred logo-04.svg" alt="GeoFred" fill className="object-contain" />
               </div>
               <span className="font-black text-sm hidden sm:block">Agent Panel</span>
             </Link>

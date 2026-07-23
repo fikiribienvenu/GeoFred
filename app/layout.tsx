@@ -8,19 +8,23 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: {
-    default: 'GeoFredE-Terra State | Rwanda Real Estate & Survey Management',
-    template: '%s | GeoFredE-Terra State',
+    default: 'GeoFred E-Terrastate | Rwanda Real Estate & Survey Management',
+    template: '%s | GeoFred E-Terrastate',
   },
   description:
     "Rwanda's premier real estate and land survey management platform. Buy, sell, rent properties, and access professional survey services across all provinces.",
-  keywords: ['Rwanda real estate', 'land survey Rwanda', 'property Rwanda', 'GeoFredE', 'topographic survey'],
-  authors: [{ name: 'GeoFredE-Terra State' }],
+  keywords: ['Rwanda real estate', 'land survey Rwanda', 'property Rwanda', 'GeoFred', 'topographic survey'],
+  authors: [{ name: 'GeoFred E-Terrastate' }],
+  icons: {
+    icon: '/images/favicon Geofred logo-04.svg',
+    shortcut: '/images/favicon Geofred logo-04.svg',
+  },
   openGraph: {
     type: 'website',
     locale: 'en_RW',
     url: 'https://geofred.com',
-    siteName: 'GeoFredE-Terra State',
-    title: 'GeoFredE-Terra State | Rwanda Real Estate & Survey Management',
+    siteName: 'GeoFred E-Terrastate',
+    title: 'GeoFred E-Terrastate | Rwanda Real Estate & Survey Management',
     description: "Rwanda's premier real estate and land survey management platform.",
   },
   robots: { index: true, follow: true },
